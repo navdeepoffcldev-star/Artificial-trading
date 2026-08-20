@@ -1,0 +1,6 @@
+{
+  "name": "AITrade",
+  "description": "An automated trading analysis dashboard with a floating control overlay.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

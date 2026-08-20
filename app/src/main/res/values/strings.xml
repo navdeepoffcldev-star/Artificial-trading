@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AITrade</string>
+    <string name="accessibility_description">AITrade needs accessibility access to read trading screens and automate trades on your behalf.</string>
+</resources>
