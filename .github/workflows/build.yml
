@@ -1,32 +1,42 @@
-name: Build Android APK
+name: Build Android APK (Flutter)
 
 on:
   push:
     branches: [ "main", "master" ]
-  workflow_dispatch:
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Allows manual trigger from Actions tab
 
 jobs:
   build:
+    name: Build Flutter APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug
+      - name: Install Dependencies
+        run: flutter pub get
 
-      - name: Upload APK
+      - name: Build APK (Release / Fat APK)
+        run: flutter build apk --release
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: app/build/outputs/apk/debug/*.apk
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
