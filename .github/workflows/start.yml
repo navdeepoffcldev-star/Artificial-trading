@@ -1,42 +1,36 @@
-name: Build Android APK (Flutter)
+name: Build Android APK (Java/Kotlin)
 
 on:
   push:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch: # Allows manual trigger from Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build Flutter APK
+    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
+      - name: Make Gradlew Executable
+        run: chmod +x ./gradlew
 
-      - name: Install Dependencies
-        run: flutter pub get
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Build APK (Release / Fat APK)
-        run: flutter build apk --release
-
-      - name: Upload APK Artifact
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
